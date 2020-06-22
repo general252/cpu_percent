@@ -82,6 +82,13 @@ func collectQueryData(query windows.Handle) {
 		return
 	}
 }
+
+// closeQuery
+func closeQuery(query windows.Handle) {
+	_, _, _ = pdhCloseQuery.Call(uintptr(query))
+}
+
+// GetCpuPercent
 func GetCpuPercent(interval time.Duration) (float64, error) {
 	query, err := createQuery()
 	if err != nil {
@@ -100,6 +107,9 @@ func GetCpuPercent(interval time.Duration) (float64, error) {
 	collectQueryData(query)
 
 	data, err := getCounterValue(counter)
+
+	closeQuery(query)
+
 	return data, err
 }
 
